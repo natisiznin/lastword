@@ -7,11 +7,20 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # 1. Cache the model and tokenizer to prevent reloading on every UI interaction
+import os
 @st.cache_resource
 def load_ml_artifacts():
-    model = load_model('next_word_lstm.keras')
-    with open('Tokenizer.pkl', 'rb') as f:
+    # This gets the absolute path to the directory containing app.py
+    curr_dir = os.path.dirname(os.path.realpath(__file__))
+    
+    # Join that path with your filenames
+    model_path = os.path.join(curr_dir, 'next_word_lstm.keras')
+    tokenizer_path = os.path.join(curr_dir, 'Tokenizer.pkl')
+    
+    model = load_model(model_path)
+    with open(tokenizer_path, 'rb') as f:
         tokenizer = pickle.load(f)
+        
     return model, tokenizer
 
 model, Tokenizer = load_ml_artifacts()
